@@ -1,5 +1,5 @@
 [Unit]
-Description=My test service
+Description=Fan Control Service
 After=multi-user.target
 
 [Service]

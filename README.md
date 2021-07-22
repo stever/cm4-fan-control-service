@@ -2,7 +2,14 @@
 
 Fan control service for Raspberry Pi Compute Module 4.
 
-## Setup
+## Build
+
+```bash
+mkdir bin
+make
+```
+
+## Service setup
 
 ```bash
 sudo cp fancontrol.service /etc/systemd/system/

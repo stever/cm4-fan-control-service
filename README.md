@@ -22,7 +22,7 @@ sudo systemctl start fancontrol
 sudo systemctl status fancontrol
 ```
 
-## Additional commands
+## Additional service commands
 
 ```bash
 sudo systemctl stop fancontrol # to stop the service

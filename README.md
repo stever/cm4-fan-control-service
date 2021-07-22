@@ -12,6 +12,13 @@ sudo ./main set 255 # max speed
 sudo ./main set 128 # mid speed
 ```
 
+## Python setup
+
+```bash
+sudo pip install gpiozero
+sudo pip install RPi.GPIO
+```
+
 ## Service setup
 
 ```bash

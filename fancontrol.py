@@ -1,7 +1,9 @@
 import os
-import time
+import subprocess
 
 from datetime import datetime
+from gpiozero import CPUTemperature
+from time import sleep, strftime, time
 
 home = '/home/ubuntu/'
 proj = f'{home}git/cm4-fan-control-service/'
@@ -10,10 +12,29 @@ csv = f'{home}fancontrol.csv'
 
 os.system(f'{main} set 128')
 
-while True:
-    with open(csv, 'a') as f:
-        f.write('The current timestamp is: ' + str(datetime.now()) + '\n')
-        f.close()
+# TODO: Adjust fan speed according to temperature.
+# TODO: Add fan RPM to log.
+# TODO: Add CPU frequency to log.
+# TODO: Add whether the CPU is throttled to log.
+# TODO: Send the data to Elasticsearch instead of local log file?
 
-    time.sleep(10)
+cpu = CPUTemperature()
+print(cpu.temperature)
+
+result = subprocess.run(['vcgencmd', 'measure_clock', 'arm'], stdout=subprocess.PIPE)
+print(result.stdout.decode("utf-8").rstrip())
+
+result = subprocess.run(['vcgencmd', 'measure_temp'], stdout=subprocess.PIPE)
+print(result.stdout.decode("utf-8").rstrip())
+
+result = subprocess.run(['vcgencmd', 'get_throttled'], stdout=subprocess.PIPE)
+print(result.stdout.decode("utf-8").rstrip())
+
+#with open(csv, 'a') as log:
+#    while True:
+#        cpu = CPUTemperature()
+#        temp = str(cpu.temperature)
+#        time = strftime("%Y-%m-%d %H:%M:%S")
+#        log.write(f'{time},{temp}\n')
+#        sleep(1)
 

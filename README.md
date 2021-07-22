@@ -1,4 +1,4 @@
- CM4 Fan Control Service
+# CM4 Fan Control Service
 
 Fan control service for Raspberry Pi Compute Module 4.
 

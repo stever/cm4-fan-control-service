@@ -1,0 +1,11 @@
+[Unit]
+Description=My test service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /home/ubuntu/git/cm4-fan-control-service/fancontrol.py
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,27 @@
-# EMC2301
+ CM4 Fan Control Service
+
+Fan control service for Raspberry Pi Compute Module 4.
+
+## Setup
+
+```bash
+sudo cp fancontrol.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable fancontrol
+sudo systemctl start fancontrol
+sudo systemctl status fancontrol
+```
+
+## Additional commands
+
+```bash
+sudo systemctl stop fancontrol # to stop the service
+sudo systemctl restart fancontrol # to restart
+sudo systemctl status fancontrol # to check status
+```
+
+## EMC2301
+
 Software for controlling an EMC2301 via i2c and other standards.
 
 For use with Raspbery Pi using Linux type operating systems.

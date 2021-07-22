@@ -7,6 +7,9 @@ Fan control service for Raspberry Pi Compute Module 4.
 ```bash
 mkdir bin
 make
+./main
+sudo ./main set 255 # max speed
+sudo ./main set 128 # mid speed
 ```
 
 ## Service setup

@@ -6,7 +6,7 @@ from gpiozero import CPUTemperature
 from time import sleep, strftime, time
 
 home = '/home/ubuntu/'
-proj = f'{home}git/cm4-fan-control-service/'
+proj = f'{home}cm4-fan-control-service/'
 main = f'{proj}main'
 csv = f'{home}fancontrol.csv'
 

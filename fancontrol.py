@@ -11,6 +11,9 @@ from gpiozero import CPUTemperature
 from requests.auth import HTTPBasicAuth
 from time import sleep, strftime, time
 
+# Disable warning on HTTPS where SSL verification is off.
+requests.packages.urllib3.disable_warnings() 
+
 # Config
 path_home = '/home/ubuntu/'
 path_proj = f'{path_home}cm4-fan-control-service/'
@@ -141,7 +144,7 @@ while True:
             'fan_full_temp': fan_full_temp
         }
 
-        url = f'{elastic_host}/fan_control/status/'
+        url = f'{elastic_host}/fan_control/_doc/'
         headers = {'Content-Type': 'application/json', 'Accept-Charset': 'UTF-8'}
         data = json.dumps(payload)
         auth = HTTPBasicAuth(elastic_user, elastic_pass)
@@ -150,7 +153,8 @@ while True:
         #print(f'url: {url}')
         #print(f'data: {data}')
 
-        requests.post(url, data=data, headers=headers, auth=auth, verify=verify)
+        print(requests.post(url, data=data, headers=headers, auth=auth, verify=verify))
+
    
     except:
         print("Unexpected error:", sys.exc_info()[0])

@@ -1,21 +1,30 @@
+import json
 import os
+import requests
+import socket
 import subprocess
+import sys
 
 from datetime import datetime
 from dotenv import load_dotenv
 from gpiozero import CPUTemperature
+from requests.auth import HTTPBasicAuth
 from time import sleep, strftime, time
 
 load_dotenv()
 
 # Config
 elastic_host = os.getenv('ELASTICSEARCH_HOST')
+elastic_user = 'elastic'
 elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
 fan_min_temp = 40.0 
 fan_full_temp = 50.0
 path_home = '/home/ubuntu/'
 path_proj = f'{path_home}cm4-fan-control-service/'
 path_main = f'{path_proj}main'
+
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
 
 
 def get_fan_rpm():
@@ -43,10 +52,12 @@ def get_desired_fan_speed(cpu_temp: float):
 
     # CPU temp below which fan will be deactivated.
     if cpu_temp < fan_min_temp:
+        print('desired_fan_speed: 0%')
         return 0
 
     # CPU temp above which fan will be on maximum.
     if cpu_temp >= fan_full_temp:
+        print('desired_fan_speed: 100%')
         return 255
 
     # Get percentage value of cpu_temp between min and full temps.
@@ -58,7 +69,7 @@ def get_desired_fan_speed(cpu_temp: float):
 
     # Valid fan speed value: 0-255.
     assert q <= 1
-    return 255 * q
+    return int(255 * q)
 
 
 def set_fan_speed(fan_speed: int):
@@ -108,14 +119,41 @@ while True:
    
     # Fan speed
     fan_speed = get_desired_fan_speed(cpu_temp)
+    print(f'desired_fan_speed: {fan_speed}')
     
     # Adjust fan speed according to temperature.
     set_fan_speed(fan_speed)
-    
-    # TODO: Send the data to Elasticsearch
-    #   TODO: Add CPU frequency to log.
-    #   TODO: Add whether the CPU is throttled to log.
-    #   TODO: Add fan RPM to log.
+
+    print(f'hostname: {hostname}')
+    print(f'local_ip: {local_ip}')
+
+    try:
+        payload = {
+            'hostname': hostname,
+            'local_ip': local_ip,
+            'time': time(),
+            'cpu_temp': cpu_temp,
+            'cpu_freq': cpu_freq,
+            'cpu_throttled': cpu_throttled,
+            'fan_rpm': fan_rpm,
+            'fan_speed': fan_speed,
+            'fan_min_temp': fan_min_temp,
+            'fan_full_temp': fan_full_temp
+        }
+
+        url = f'{elastic_host}/fan_control/status/'
+        headers = {'Content-Type': 'application/json', 'Accept-Charset': 'UTF-8'}
+        data = json.dumps(payload)
+        auth = HTTPBasicAuth(elastic_user, elastic_pass)
+        verify = False
+
+        #print(f'url: {url}')
+        #print(f'data: {data}')
+
+        requests.post(url, data=data, headers=headers, auth=auth, verify=verify)
+   
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
 
     sleep(1)
 

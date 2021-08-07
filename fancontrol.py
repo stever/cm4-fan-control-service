@@ -11,8 +11,6 @@ from gpiozero import CPUTemperature
 from requests.auth import HTTPBasicAuth
 from time import sleep, strftime, time
 
-load_dotenv()
-
 # Config
 elastic_host = os.getenv('ELASTICSEARCH_HOST')
 elastic_user = 'elastic'
@@ -22,6 +20,8 @@ fan_full_temp = 50.0
 path_home = '/home/ubuntu/'
 path_proj = f'{path_home}cm4-fan-control-service/'
 path_main = f'{path_proj}main'
+
+load_dotenv(path_proj)
 
 hostname = socket.gethostname()
 local_ip = socket.gethostbyname(hostname)

@@ -2,6 +2,17 @@
 
 Fan control service for Raspberry Pi Compute Module 4.
 
+## Configuration
+
+```bash
+vi .env
+```
+
+```
+ELASTICSEARCH_HOST="https://10.43.143.94:9200"
+ELASTICSEARCH_PASSWORD="<password>"
+```
+
 ## Build
 
 ```bash
@@ -17,6 +28,7 @@ sudo ./main set 128 # mid speed
 ```bash
 sudo pip install gpiozero
 sudo pip install RPi.GPIO
+sudo pip install python-dotenv
 ```
 
 ## Service setup

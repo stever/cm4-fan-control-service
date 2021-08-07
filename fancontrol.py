@@ -12,16 +12,16 @@ from requests.auth import HTTPBasicAuth
 from time import sleep, strftime, time
 
 # Config
-elastic_host = os.getenv('ELASTICSEARCH_HOST')
-elastic_user = 'elastic'
-elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
-fan_min_temp = 40.0 
-fan_full_temp = 50.0
 path_home = '/home/ubuntu/'
 path_proj = f'{path_home}cm4-fan-control-service/'
 path_main = f'{path_proj}main'
-
-load_dotenv(path_proj)
+path_dotenv = f'{path_proj}.env'
+load_dotenv(path_dotenv)
+elastic_host = os.getenv('ELASTICSEARCH_HOST')
+elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
+elastic_user = 'elastic'
+fan_min_temp = 40.0 
+fan_full_temp = 50.0
 
 hostname = socket.gethostname()
 local_ip = socket.gethostbyname(hostname)

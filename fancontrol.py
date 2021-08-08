@@ -151,15 +151,15 @@ while True:
             'cpu_freq': cpu_freq,
             'cpu_temp': cpu_temp,
             'cpu_throttled': cpu_throttled,
-            'cpu_usage': cpu_usage,
-            'disk_usage': disk_usage,
+            'cpu_usage': cpu_usage / 100,
+            'disk_usage': disk_usage / 100,
             'fan_rpm': fan_rpm,
             'fan_speed': desired_fan_speed,
             'fan_full_temp': fan_full_temp,
             'fan_min_temp': fan_min_temp,
             'hostname': hostname,
             'local_ip': local_ip,
-            'mem_usage': mem_usage,
+            'mem_usage': mem_usage / 100,
             'time': time()
         }
 

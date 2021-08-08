@@ -1,5 +1,6 @@
 import json
 import os
+import psutil
 import requests
 import socket
 import subprocess
@@ -28,8 +29,11 @@ elastic_user = 'elastic'
 fan_min_temp = 40.0 
 fan_full_temp = 50.0
 
+# Machine info
 hostname = socket.gethostname()
 local_ip = socket.gethostbyname(hostname)
+print(f'hostname: {hostname}')
+print(f'local_ip: {local_ip}')
 
 
 def get_fan_rpm():
@@ -130,21 +134,33 @@ while True:
     # Adjust fan speed according to temperature.
     set_fan_speed(desired_fan_speed)
 
-    print(f'hostname: {hostname}')
-    print(f'local_ip: {local_ip}')
+    # CPU usage
+    cpu_usage = psutil.cpu_percent()
+    print(f'cpu_usage: {cpu_usage}%')
+
+    # Memory usage
+    mem_usage = psutil.virtual_memory().percent
+    print(f'mem_usage: {mem_usage}%')
+
+    # Disk usage
+    disk_usage = psutil.disk_usage(os.sep).percent
+    print(f'disk_usage: {disk_usage}%')
 
     try:
         payload = {
-            'hostname': hostname,
-            'local_ip': local_ip,
-            'time': time(),
-            'cpu_temp': cpu_temp,
             'cpu_freq': cpu_freq,
+            'cpu_temp': cpu_temp,
             'cpu_throttled': cpu_throttled,
+            'cpu_usage': cpu_usage,
+            'disk_usage': disk_usage,
             'fan_rpm': fan_rpm,
             'fan_speed': desired_fan_speed,
+            'fan_full_temp': fan_full_temp,
             'fan_min_temp': fan_min_temp,
-            'fan_full_temp': fan_full_temp
+            'hostname': hostname,
+            'local_ip': local_ip,
+            'mem_usage': mem_usage,
+            'time': time()
         }
 
         url = f'{elastic_host}/fan_control/_doc/'

@@ -19,6 +19,7 @@ path_home = '/home/ubuntu/'
 path_proj = f'{path_home}cm4-fan-control-service/'
 path_main = f'{path_proj}main'
 path_dotenv = f'{path_proj}.env'
+assert os.path.isfile(path_dotenv), '.env file is missing!'
 load_dotenv(path_dotenv)
 elastic_host = os.getenv('ELASTICSEARCH_HOST')
 elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
@@ -48,7 +49,8 @@ def get_fan_rpm():
             rpm = line[len('FAN_SPEED: '):]
             return rpm
 
-    raise RuntimeError('FAN_SPEED not found in command output')
+    #raise RuntimeError('FAN_SPEED not found in command output')
+    return 0 # There may be no fan available.
 
 
 def get_desired_fan_speed(cpu_temp: float):

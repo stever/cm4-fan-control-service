@@ -29,6 +29,7 @@ sudo ./main set 128 # mid speed
 sudo pip install gpiozero
 sudo pip install RPi.GPIO
 sudo pip install python-dotenv
+sudo pip install psutil
 ```
 
 ## Service setup

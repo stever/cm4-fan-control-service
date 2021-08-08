@@ -12,6 +12,7 @@ from requests.auth import HTTPBasicAuth
 from time import sleep, strftime, time
 
 # Disable warning on HTTPS where SSL verification is off.
+# NOTE: This is because Elastic cluster uses self-signed certificate.
 requests.packages.urllib3.disable_warnings() 
 
 # Config

@@ -47,7 +47,7 @@ def get_fan_rpm():
     for line in lines:
         if line.startswith('FAN_SPEED: '):
             rpm = line[len('FAN_SPEED: '):]
-            return rpm
+            return int(rpm)
 
     #raise RuntimeError('FAN_SPEED not found in command output')
     return 0 # There may be no fan available.
@@ -123,11 +123,11 @@ while True:
     print(f'fan_rpm: {fan_rpm}')
    
     # Fan speed
-    fan_speed = get_desired_fan_speed(cpu_temp)
-    print(f'desired_fan_speed: {fan_speed}')
+    desired_fan_speed = get_desired_fan_speed(cpu_temp)
+    print(f'desired_fan_speed: {desired_fan_speed}')
     
     # Adjust fan speed according to temperature.
-    set_fan_speed(fan_speed)
+    set_fan_speed(desired_fan_speed)
 
     print(f'hostname: {hostname}')
     print(f'local_ip: {local_ip}')
@@ -141,7 +141,7 @@ while True:
             'cpu_freq': cpu_freq,
             'cpu_throttled': cpu_throttled,
             'fan_rpm': fan_rpm,
-            'fan_speed': fan_speed,
+            'fan_speed': desired_fan_speed,
             'fan_min_temp': fan_min_temp,
             'fan_full_temp': fan_full_temp
         }
@@ -155,8 +155,8 @@ while True:
         #print(f'url: {url}')
         #print(f'data: {data}')
 
-        print(requests.post(url, data=data, headers=headers, auth=auth, verify=verify))
-
+        response = requests.post(url, data=data, headers=headers, auth=auth, verify=verify)
+        assert response.status_code == 201
    
     except:
         print("Unexpected error:", sys.exc_info()[0])

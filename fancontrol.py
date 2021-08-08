@@ -26,7 +26,7 @@ load_dotenv(path_dotenv)
 elastic_host = os.getenv('ELASTICSEARCH_HOST')
 elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
 elastic_user = 'elastic'
-fan_min_temp = 48.0 
+fan_min_temp = 38.0 
 fan_full_temp = 58.0
 sleep_secs = 1
 

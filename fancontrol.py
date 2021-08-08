@@ -28,6 +28,7 @@ elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
 elastic_user = 'elastic'
 fan_min_temp = 40.0 
 fan_full_temp = 50.0
+sleep_secs = 1
 
 # Machine info
 hostname = socket.gethostname()
@@ -178,5 +179,5 @@ while True:
     except:
         print("Unexpected error:", sys.exc_info()[0])
 
-    sleep(1)
+    sleep(sleep_secs)
 

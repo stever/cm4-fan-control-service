@@ -17,7 +17,7 @@ from time import sleep, strftime, time
 requests.packages.urllib3.disable_warnings() 
 
 # Config
-path_home = '/home/ubuntu/'
+path_home = '/home/pi/'
 path_proj = f'{path_home}cm4-fan-control-service/'
 path_main = f'{path_proj}main'
 path_dotenv = f'{path_proj}.env'
@@ -26,6 +26,7 @@ load_dotenv(path_dotenv)
 elastic_host = os.getenv('ELASTICSEARCH_HOST')
 elastic_pass = os.getenv('ELASTICSEARCH_PASSWORD')
 elastic_user = 'elastic'
+elastic_log = False
 fan_min_temp = 38.0 
 fan_full_temp = 58.0
 sleep_secs = 1
@@ -147,37 +148,38 @@ while True:
     disk_usage = psutil.disk_usage(os.sep).percent
     print(f'disk_usage: {disk_usage}%')
 
-    try:
-        payload = {
-            'cpu_freq': cpu_freq,
-            'cpu_temp': cpu_temp,
-            'cpu_throttled': cpu_throttled,
-            'cpu_usage': cpu_usage / 100,
-            'disk_usage': disk_usage / 100,
-            'fan_rpm': fan_rpm,
-            'fan_speed': desired_fan_speed,
-            'fan_full_temp': fan_full_temp,
-            'fan_min_temp': fan_min_temp,
-            'hostname': hostname,
-            'local_ip': local_ip,
-            'mem_usage': mem_usage / 100,
-            'time': time()
-        }
+    if elastic_log:
+        try:
+            payload = {
+                'cpu_freq': cpu_freq,
+                'cpu_temp': cpu_temp,
+                'cpu_throttled': cpu_throttled,
+                'cpu_usage': cpu_usage / 100,
+                'disk_usage': disk_usage / 100,
+                'fan_rpm': fan_rpm,
+                'fan_speed': desired_fan_speed,
+                'fan_full_temp': fan_full_temp,
+                'fan_min_temp': fan_min_temp,
+                'hostname': hostname,
+                'local_ip': local_ip,
+                'mem_usage': mem_usage / 100,
+                'time': time()
+            }
 
-        url = f'{elastic_host}/fan_control/_doc/'
-        headers = {'Content-Type': 'application/json', 'Accept-Charset': 'UTF-8'}
-        data = json.dumps(payload)
-        auth = HTTPBasicAuth(elastic_user, elastic_pass)
-        verify = False
+            url = f'{elastic_host}/fan_control/_doc/'
+            headers = {'Content-Type': 'application/json', 'Accept-Charset': 'UTF-8'}
+            data = json.dumps(payload)
+            auth = HTTPBasicAuth(elastic_user, elastic_pass)
+            verify = False
 
-        #print(f'url: {url}')
-        #print(f'data: {data}')
+            #print(f'url: {url}')
+            #print(f'data: {data}')
 
-        response = requests.post(url, data=data, headers=headers, auth=auth, verify=verify)
-        assert response.status_code == 201
+            response = requests.post(url, data=data, headers=headers, auth=auth, verify=verify)
+            assert response.status_code == 201
    
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
 
     sleep(sleep_secs)
 
